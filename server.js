@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const bcrypt = require('bcrypt');
 
 dotenv.config();
 
@@ -25,13 +26,18 @@ app.get('/passwords', async (req, res) => {
 });
 
 app.post('/passwords', async (req, res) => {
+  const { name, value } = req.body;
+  
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(value, saltRounds);
+  
   const password = new Password({
-    name: req.body.name,
-    value: req.body.value,
+    name: name,
+    value: hashedFlagged wordspng,
   });
 
   await password.save();
-  res.send(password);
+  res.send({name: password.name, message: "Password saved successfully!"});
 });
 
 const PORT = process.env.PORT || 3000;
