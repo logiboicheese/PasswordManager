@@ -9,35 +9,35 @@ const app = express();
 
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Could not connect to MongoDB', err));
 
-const passwordSchema = new mongoose.Schema({
-  name: String,
-  value: String,
+const passwordRecordSchema = new mongoose.Schema({
+  serviceName: String,
+  encryptedPassword: String,
 });
 
-const Password = mongoose.model('Password', passwordSchema);
+const PasswordRecord = mongoose.model('PasswordRecord', passwordRecordSchema);
 
 app.get('/passwords', async (req, res) => {
-  const passwords = await Password.find();
-  res.send(passwords);
+  const allPasswordRecords = await PasswordRecord.find();
+  res.send(allPasswordRecords);
 });
 
 app.post('/passwords', async (req, res) => {
-  const { name, value } = req.body;
+  const { name: serviceName, value: rawPassword } = req.body;
   
   const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(value, saltRounds);
+  const hashedPassword = await bcrypt.hash(rawPassword, saltRounds);
   
-  const password = new Password({
-    name: name,
-    value: hashedFlagged wordspng,
+  const newPasswordRecord = new PasswordRecord({
+    serviceName: serviceName,
+    encryptedPassword: hashedPassword,
   });
 
-  await password.save();
-  res.send({name: password.name, message: "Password saved successfully!"});
+  await newPasswordRecord.save();
+  res.send({serviceName: newPasswordRecord.serviceName, message: "Password saved successfully!"});
 });
 
 const PORT = process.env.PORT || 3000;
