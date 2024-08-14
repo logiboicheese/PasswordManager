@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
-const Password = require('./passwordModel');
+const PasswordEntry = require('./passwordModel');
 
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -9,56 +9,56 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.log(err));
 
-const createPassword = async (req, res) => {
+const createPasswordEntry = async (req, res) => {
     try {
-        const newPassword = new Password(req.body);
-        await newPassword.save();
-        res.status(201).json(newPassword);
+        const newPasswordEntry = new PasswordEntry(req.body);
+        await newPasswordEntry.save();
+        res.status(201).json(newPasswordEntry);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 };
 
-const getPasswords = async (req, res) => {
+const getAllPasswordEntries = async (req, res) => {
     try {
-        const passwords = await Password.find();
-        res.status(200).json(passwords);
+        const passwordEntries = await PasswordEntry.find();
+        res.status(200).json(passwordEntries);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
 };
 
-const getPasswordById = async (req, res) => {
+const getPasswordEntryById = async (req, res) => {
     try {
-        const password = await Password.findById(req.params.id);
-        res.status(200).json(password);
+        const passwordEntry = await PasswordEntry.findById(req.params.id);
+        res.status(200).json(passwordEntry);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
 };
 
-const updatePassword = async (req, res) => {
+const updatePasswordEntry = async (req, res) => {
     try {
-        const updatedPassword = await Password.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.status(200).json(updatedPassword);
+        const updatedPasswordEntry = await PasswordEntry.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.status(200).json(updatedPasswordEntry);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 };
 
-const deletePassword = async (req, res) => {
+const deletePasswordEntry = async (req, res) => {
     try {
-        await Password.findByIdAndDelete(req.params.id);
-        res.status(200).json({ message: 'Password deleted successfully' });
+        await PasswordEntry.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: 'Password entry deleted successfully' });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
 };
 
 module.exports = {
-    createPassword,
-    getPasswords,
-    getPasswordById,
-    updatePassword,
-    deletePassword
+    createPasswordEntry,
+    getAllPasswordEntries,
+    getPasswordEntryById,
+    updatePasswordEntry,
+    deletePasswordEntry
 };
