@@ -1,13 +1,11 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-const dbConnectionURL = {
-    'LOCALURL': `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
-};
+const dbConnectionURL = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(dbConnectionURL.LOCALURL, {
+        await mongoose.connect(dbConnectionURL, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
